@@ -9,12 +9,16 @@ public class PlayGame {
 
         Game2048 game2048 = new Game2048(4);
         Scanner scanner = new Scanner(System.in);
-        int userInput = 1;
+        int userInput;
 
-        while (!game2048.nextMove(userInput)) {
+        while (true) {
 
-            System.out.print("Your Next Move : " );
+            System.out.print("Enter Your Move : " );
             userInput = scanner.nextInt();
+            if(game2048.nextMove(userInput)) {
+                System.out.println("GAME OVER");
+                break;
+            }
         }
     }
 }

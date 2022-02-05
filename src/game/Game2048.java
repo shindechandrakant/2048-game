@@ -22,6 +22,7 @@ public class Game2048 {
         this.gridSize = gridSize;
         putNumberIntoGrid();
         putNumberIntoGrid();
+        printGrid();
     }
 
     private class Pair {
@@ -56,32 +57,30 @@ public class Game2048 {
 
     public boolean nextMove(int userInput) {
 
-        boolean isOverGame = true;
+        boolean isOverGame;
         switch (userInput) {
 
             case LEFT:
-                isOverGame = leftMove();
+                leftMove();
                 break;
             case RIGHT:
-                isOverGame = rightMove();
+                rightMove();
                 break;
             case UP:
-                isOverGame = upMove();
+                upMove();
                 break;
             case DOWN:
-                isOverGame = downMove();
+                downMove();
         }
 
-        putNumberIntoGrid();
+        isOverGame = putNumberIntoGrid();
         printGrid();
         return isOverGame;
     }
 
-    private void putNumberIntoGrid() {
-
+    private boolean putNumberIntoGrid() {
 
         ArrayList<Pair> emptySpots = new ArrayList<>();
-
         for(int row = 0; row < grid.length; row++) {
 
             for(int col = 0; col < grid[row].length; col++) {
@@ -94,13 +93,38 @@ public class Game2048 {
             }
         }
 
-        if(emptySpots.size() == 0)
-            return ;
+        if(emptySpots.size() == 0) {
+
+            return isGameOver();
+        }
 
         int indx = random.nextInt(emptySpots.size());
         int row = emptySpots.get(indx).getRow();
         int col = emptySpots.get(indx).getCol();
         grid[row][col] = ((row+col) % 2 == 0 ? 2 : 4);
+        return false;
+    }
+
+    private boolean isGameOver() {
+
+        for(int row = 0; row < gridSize; row++) {
+
+            for(int col = 0; col < gridSize; col++) {
+
+                if(row-1 >= 0 && grid[row][col] == grid[row-1][col]) {
+                    return false;
+                }
+                if(col + 1 < gridSize && grid[row][col] == grid[row][col+1]) {
+                    return false;
+                }
+                if(row+1 < gridSize && grid[row][col] == grid[row+1][col]) {
+                    return false;
+                }
+                if(col-1 >= 0 && grid[row][col] == grid[row][col-1])
+                    return false;
+            }
+        }
+        return true;
     }
 
     void shiftRowZeros(int[] arr) {
@@ -139,9 +163,7 @@ public class Game2048 {
         shiftRowZeros(arr);
     }
 
-    private boolean leftMove() {
-
-        boolean status = false;
+    private void leftMove() {
 
         for(int row = 0; row < gridSize; row++) {
             int[] arr = new int[gridSize];
@@ -155,10 +177,9 @@ public class Game2048 {
                 grid[row][col] = arr[col];
             }
         }
-        return  status;
     }
-    private boolean rightMove() {
-        boolean status = false;
+
+    private void rightMove() {
 
         for(int row = 0; row < gridSize; row++) {
 
@@ -167,23 +188,19 @@ public class Game2048 {
             for(int col = gridSize-1; col >= 0; col--) {
 
                 arr[counter] = grid[row][col];
-                counter--;
+                counter++;
             }
             addRowElements(arr);
             counter = 0;
             for(int col = gridSize-1; col >= 0; col--) {
 
                 grid[row][col] = arr[counter];
-                counter--;
+                counter++;
             }
         }
-
-        return  status;
     }
 
-    private boolean upMove() {
-
-        boolean status = false;
+    private void upMove() {
 
         for(int col = 0; col < gridSize; col++) {
 
@@ -203,14 +220,9 @@ public class Game2048 {
                 counter++;
             }
         }
-
-
-
-        return  status;
     }
 
-    private boolean downMove() {
-        boolean status = false;
+    private void downMove() {
 
         for(int col = 0; col < gridSize; col++) {
 
@@ -230,10 +242,6 @@ public class Game2048 {
                 counter--;
             }
         }
-
-
-
-        return  status;
     }
 
 }
