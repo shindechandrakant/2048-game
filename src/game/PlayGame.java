@@ -1,9 +1,9 @@
 package game;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PlayGame {
-
 
     public static void main(String[] args) {
 
@@ -13,10 +13,16 @@ public class PlayGame {
 
         while (true) {
 
-            System.out.print("Enter Your Move : " );
-            userInput = scanner.nextInt();
-            if(game2048.nextMove(userInput)) {
-                System.out.println("GAME OVER");
+            try {
+                System.out.print("Enter Your Move : " );
+                userInput = scanner.nextInt();
+                if(game2048.nextMove(userInput)) {
+                    System.out.println("GAME OVER");
+                    break;
+                }
+            }catch (InputMismatchException e) {
+
+                System.out.println("InValid input");
                 break;
             }
         }

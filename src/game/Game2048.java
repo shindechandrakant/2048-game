@@ -2,18 +2,18 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Game2048 {
 
-    private static final int UP = 3;
     private static final int LEFT = 1;
-    private static final int DOWN = 4;
     private static final int RIGHT = 2;
+    private static final int UP = 3;
+    private static final int DOWN = 4;
+    private static final int LIMIT = 2048;
 
-    private int[][] grid;
-    private Random random;
-    int gridSize;
+    private final int[][] grid;
+    private final Random random;
+    private final int gridSize;
 
     public Game2048(int gridSize) {
 
@@ -28,16 +28,14 @@ public class Game2048 {
     private class Pair {
 
         int row, col;
-        public Pair(int x, int y) {
+        public Pair(int row, int col) {
 
-            this.row = x;
-            this.col = y;
+            this.row = row;
+            this.col = col;
         }
-
         public int getRow() {
             return row;
         }
-
         public int getCol() {
             return col;
         }
@@ -49,7 +47,7 @@ public class Game2048 {
 
             for(int j = 0; j < grid[i].length; j++) {
 
-                System.out.print(grid[i][j] + " ");
+                System.out.printf("%4d", grid[i][j]);
             }
             System.out.println();
         }
@@ -57,9 +55,7 @@ public class Game2048 {
 
     public boolean nextMove(int userInput) {
 
-        boolean isOverGame;
         switch (userInput) {
-
             case LEFT:
                 leftMove();
                 break;
@@ -73,9 +69,9 @@ public class Game2048 {
                 downMove();
         }
 
-        isOverGame = putNumberIntoGrid();
+        boolean isGameOver = putNumberIntoGrid();
         printGrid();
-        return isOverGame;
+        return isGameOver;
     }
 
     private boolean putNumberIntoGrid() {
@@ -84,6 +80,12 @@ public class Game2048 {
         for(int row = 0; row < grid.length; row++) {
 
             for(int col = 0; col < grid[row].length; col++) {
+
+                // if the Cell reaches at 2048 then it will end game
+                if(grid[row][col] == LIMIT) {
+
+                    return true;
+                }
 
                 // if grid is empty then add location for random number input
                 if(grid[row][col] == 0) {
@@ -94,7 +96,6 @@ public class Game2048 {
         }
 
         if(emptySpots.size() == 0) {
-
             return isGameOver();
         }
 
@@ -120,17 +121,17 @@ public class Game2048 {
                 if(row+1 < gridSize && grid[row][col] == grid[row+1][col]) {
                     return false;
                 }
-                if(col-1 >= 0 && grid[row][col] == grid[row][col-1])
+                if(col-1 >= 0 && grid[row][col] == grid[row][col-1]) {
                     return false;
+                }
             }
         }
         return true;
     }
 
-    void shiftRowZeros(int[] arr) {
+    private void shiftRowZeros(int[] arr) {
 
         int n = arr.length;
-
         for(int i = 0; i < n; i++) {
 
             int end = i;
@@ -150,7 +151,7 @@ public class Game2048 {
         }
     }
 
-    void addRowElements(int[] arr) {
+    private void addRowElements(int[] arr) {
 
         int n = arr.length;
         shiftRowZeros(arr);
