@@ -20,14 +20,14 @@ public class Game2048 {
         this.grid = new int[gridSize][gridSize];
         this.random = new Random();
         this.gridSize = gridSize;
-        putNumberIntoGrid();
-        putNumberIntoGrid();
+        putNumberIntoGrid(true);
+        putNumberIntoGrid(true);
         printGrid();
     }
 
     private class Pair {
 
-        int row, col;
+        private int row, col;
         public Pair(int row, int col) {
 
             this.row = row;
@@ -55,26 +55,29 @@ public class Game2048 {
 
     public boolean nextMove(int userInput) {
 
+        boolean addNumber = false;
         switch (userInput) {
             case LEFT:
-                leftMove();
+                addNumber = leftMove();
                 break;
             case RIGHT:
-                rightMove();
+                addNumber = rightMove();
                 break;
             case UP:
-                upMove();
+                addNumber = upMove();
                 break;
             case DOWN:
-                downMove();
+                addNumber = downMove();
         }
 
-        boolean isGameOver = putNumberIntoGrid();
+        boolean isGameOver = putNumberIntoGrid(addNumber);
         printGrid();
         return isGameOver;
+
+
     }
 
-    private boolean putNumberIntoGrid() {
+    private boolean putNumberIntoGrid(boolean addNumber) {
 
         ArrayList<Pair> emptySpots = new ArrayList<>();
         for(int row = 0; row < grid.length; row++) {
@@ -95,7 +98,7 @@ public class Game2048 {
             }
         }
 
-        if(emptySpots.size() == 0) {
+        if(emptySpots.size() == 0 || !addNumber) {
             return isGameOver();
         }
 
@@ -164,9 +167,11 @@ public class Game2048 {
         shiftRowZeros(arr);
     }
 
-    private void leftMove() {
+    private boolean leftMove() {
 
+        boolean isChanged = false;
         for(int row = 0; row < gridSize; row++) {
+
             int[] arr = new int[gridSize];
             for(int col = 0; col < gridSize; col++) {
 
@@ -175,12 +180,20 @@ public class Game2048 {
             addRowElements(arr);
             for(int col = 0; col < gridSize; col++) {
 
+                if(grid[row][col] != arr[col]) {
+                    isChanged = true;
+                }
                 grid[row][col] = arr[col];
             }
         }
+
+        return isChanged;
     }
 
-    private void rightMove() {
+    private boolean rightMove() {
+
+
+        boolean isChanged = false;
 
         for(int row = 0; row < gridSize; row++) {
 
@@ -195,13 +208,22 @@ public class Game2048 {
             counter = 0;
             for(int col = gridSize-1; col >= 0; col--) {
 
+                if(grid[row][col] != arr[counter]) {
+                    isChanged = true;
+                }
+
                 grid[row][col] = arr[counter];
                 counter++;
             }
         }
+
+        return isChanged;
     }
 
-    private void upMove() {
+    private boolean upMove() {
+
+
+        boolean isChanged = false;
 
         for(int col = 0; col < gridSize; col++) {
 
@@ -217,13 +239,23 @@ public class Game2048 {
             counter = 0;
             for(int row = 0; row < gridSize; row++) {
 
+                if(grid[row][col] != arr[counter]) {
+                    isChanged = true;
+                }
+
                 grid[row][col] = arr[counter];
                 counter++;
             }
         }
+
+
+        return isChanged;
     }
 
-    private void downMove() {
+    private boolean downMove() {
+
+
+        boolean isChanged = false;
 
         for(int col = 0; col < gridSize; col++) {
 
@@ -239,10 +271,17 @@ public class Game2048 {
             counter = gridSize-1;
             for(int row = 0; row < gridSize; row++) {
 
+                if(grid[row][col] != arr[counter]) {
+                    isChanged = true;
+                }
+
                 grid[row][col] = arr[counter];
                 counter--;
             }
         }
+
+
+        return isChanged;
     }
 
 }

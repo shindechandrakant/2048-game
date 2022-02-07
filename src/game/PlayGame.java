@@ -14,13 +14,14 @@ public class PlayGame {
         while (true) {
 
             try {
+
                 System.out.print("Enter Your Move : " );
                 userInput = scanner.nextInt();
                 if(game2048.nextMove(userInput)) {
                     System.out.println("GAME OVER");
                     break;
                 }
-            }catch (InputMismatchException e) {
+            } catch (InputMismatchException e) {
 
                 System.out.println("InValid input");
                 break;
